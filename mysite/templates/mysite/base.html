@@ -1,0 +1,30 @@
+{% load staticfiles %}
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="{% static 'CSS/blog.css' %}">
+
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Beio-听风说雨</title>
+</head>
+<body>
+<div class="page-header">
+{% if user.is_authenticated %}
+    <p class="top-menu">你好 {{ user.username }}<small>&nbsp;<a href="{% url 'logout' %}">Log out</a></p>
+    {% else %}
+    <a href="{% url 'login' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span></a>
+    {% endif %}
+<h1><a href="/">听风说雨</a></h1>
+</div>
+<div class="content">
+    <div class="row">
+        <div class="col-md-8">
+           {% block content %}
+           {% endblock %}
+        </div>
+    </div>
+</div>
+</body>
+</html>

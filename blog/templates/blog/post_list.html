@@ -2,11 +2,29 @@
 {% block content %}
     {% for post in posts %}
         <div class="post">
-            <h1><a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a>
-           	</h1>
-            </h1>
-            <p>published: {{ post.published_date }}</p>
-            <p>{{ post.text|linebreaks }}</p>
+            <h1>
+            <a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a>
+           	</h1> 
+            
+            <p class="date">发布时间：{{ post.published_date | date:'Y-m-d' }} </p> 
+            
+                
+            <p>{{ post.text | truncatechars:200 }}</p>
         </div>
     {% endfor %}
-    {% endblock content %}
+    {% if page %}
+    <div class="pagination">
+        <span class="step-links">
+            {% if posts.has_previous %}
+                <a href="?page={{ posts.previous_page_number }}">上一页</a>
+            {% endif %}
+            <span class="current">
+                 第{{ posts.number }} 页 ，共{{ posts.paginator.num_pages }}.页
+            </span>
+            {% if posts.has_next %}
+                <a href="?page={{ posts.next_page_number }}">下一页</a>
+            {% endif %}
+        </span>
+    </div>
+    {% endif %}     
+{% endblock content %}
