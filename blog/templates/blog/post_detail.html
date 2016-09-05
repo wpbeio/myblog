@@ -1,6 +1,7 @@
 {% extends 'blog/base.html' %}
 
 {% block content %}
+<div class="post">
 <h1>{{ post.title }}</h1>
 	<div class="date">
 		{% if post.published_date %}
@@ -23,6 +24,6 @@
 		{% endif %}
 		{% endif %}
 	</div>
-	
-	<p>{{ post.text|linebreaks }}</p>
+            <p class="text">{{ post.text | safe }}</p>
+        </div>
 {% endblock content %}

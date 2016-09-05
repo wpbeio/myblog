@@ -1,10 +1,20 @@
+<!DOCTYPE html>
+
 {% load staticfiles %}
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
 <link rel="stylesheet" href="{% static 'CSS/blog.css' %}">
 
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-<!DOCTYPE html>
+
+ <link type="text/css" rel="stylesheet" href="{% static 'syntaxhighlighter/styles/shCore.css' %}"/>
+  <link type="text/css" rel="stylesheet" href="{% static 'syntaxhighlighter/styles/shCoreDefault.css' %}"/>
+ <link type="text/css" rel="stylesheet" href="{% static 'syntaxhighlighter/styles/shThemeDefault.css.css' %}"/>
+
+ <script type="text/javascript" src="{% static 'syntaxhighlighter/scripts/shCore.js' %}">
+ </script>  
+ <script class="javascript" src="{% static 'syntaxhighlighter/scripts/shAutoloader.js' %}"></script>
+   
 <html>
 <head>
     <title>Beio-听风说雨</title>
@@ -24,9 +34,11 @@
     <div class="row">
         <div class="col-md-8">
            {% block content %}
+           <script type="text/javascript">SyntaxHighlighter.all();</script>
            {% endblock %}
         </div>
     </div>
 </div>
+
 </body>
 </html>
