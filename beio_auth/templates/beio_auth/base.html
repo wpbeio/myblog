@@ -1,44 +1,63 @@
-{% extends "beio_blog/base.html"%}
- 
-{% block main%}
+<!DOCTYPE html>
+<html lang="zh-cn">
 
-{% url 'register-view' as register_url%}
-{% url 'login-view' as login_url%}
-{% url 'user-view' 'changetx' as changetx_url %}
-{% url 'user-view' 'changepassword' as changepassword_url %}
-{% url 'user-view' 'notification' as notification_url %}
+<head>
+    <meta charset="UTF-8">
+    <!--手机html -->
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
+    <title>{{website_title}}</title>
+    {% load staticfiles %} {% comment %}本地样式{% endcomment %}
+    {% comment %}<link rel="stylesheet" href="{% static '/bootstrap/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static '/bootstrap/css/bootstrap-theme.min.css' %}" />
+    <script src="{% static 'jquery/jquery.min.js' %}"></script>
+    <script src="{% static '/bootstrap/js/bootstrap.min.js' %}"></script>{% endcomment %}
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+    <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+        crossorigin="anonymous">
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="{% static 'jquery/jquery.min.js' %}"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+    <link rel="shortcut icon" href="{% static '/images/favicon.ico' %}" />
+    <link rel="bookmark" href="{% static '/images/favicon.ico' %}" />
+    <script src="{% static '/prism/prism.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'prism/prism.css' %}"> 
+    <script src="{% static '/js/vmaig.js' %}"></script>
+    <link rel="stylesheet" href="{% static '/css/vmaig.css' %}">
+    {% comment %} <link rel="stylesheet" href="{% static '/css/vmaig_comments.css' %}"> {% endcomment %}
+    <link rel="stylesheet" href="{% static '/css/auth.css' %}"> {% comment %}
+    <link rel="stylesheet" href="{% static '/jquery/jquery.Jcrop.min.css' %}">{% endcomment %}
+    <script src="{% static '/jquery/jquery.cookie.js' %}"></script>
+    {% comment %}
+    <script src="{% static '/jquery/jquery.Jcrop.min.js' %}"></script>{% endcomment %} 
+    {% block css%} {% endblock%}
+</head>
 
-<div style="height:80px;"></div>
-<div class="row">
-    <div class="col-md-2">
-        <a class="list-group-item">
-            <img src="{{user.img}}" alt="" width="40">
-            &nbsp;{{user.username}} 
-        </a>
-        <a href="{{changetx_url}}"class="list-group-item">
-            修改头像
-            <span class="glyphicon glyphicon-chevron-right pull-right"></span>
-        </a>
-        <a href="{{changepassword_url}}"class="list-group-item">
-            修改密码
-            <span class="glyphicon glyphicon-chevron-right pull-right"></span>
-        </a>
-        <a href="{{notification_url}}"class="list-group-item active">
-            消息
-            <span class="glyphicon glyphicon-chevron-right pull-right"></span>
-        </a>
-        <a href="{{register_url}}"class="list-group-item">
-            注册新用户
-            <span class="glyphicon glyphicon-chevron-right pull-right"></span>
-        </a>
-        <a href="{{login_url}}"class="list-group-item">
-            重新登陆
-            <span class="glyphicon glyphicon-chevron-right pull-right"></span>
-        </a>
+<body id="vmaig">
+    <!-- 导航栏 -->
+    {% include "beio_blog/include/nav.html"%}
+    <!-- 文章列表 与 侧边的东西 -->
+    <div id="vmaig-main">
+        <div id="vmaig-content" class="container">
+            <div class="row">
+                {%block main%} {% endblock %}
+            </div>
+        </div>
+        <footer>
+            <div class="container">
+                <p class="text-center">基于Dajngo1.10,Bootsratp3, <a href="/">网站地图</a></p>
+            </div>
+        </footer>
     </div>
-    <div class="col-md-10">
-       {% block js%}{% endblock%}
 
-    </div>
-</div>
-{%endblock%}
+</body>
+
+
+{% comment %} <script type="text/javascript" src="{% static '/js/vmaig.js' %}"></script> {% endcomment %}
+{% block js%}{% endblock%}
+
+</html>
