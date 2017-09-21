@@ -45,6 +45,7 @@
         <div id="vmaig-content" class="container">
             <div class="row">
                 {%block main%} {% endblock %}
+                {% block js%}{% endblock%}
             </div>
         </div>
         <footer>
@@ -57,7 +58,7 @@
 </body>
 
 
-{% comment %} <script type="text/javascript" src="{% static '/js/vmaig.js' %}"></script> {% endcomment %}
-{% block js%}{% endblock%}
+<script type="text/javascript" src="{% static '/js/vmaig.js' %}"></script>
+
 
 </html>
