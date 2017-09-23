@@ -25,15 +25,17 @@
     <link rel="shortcut icon" href="{% static '/images/favicon.ico' %}" />
     <link rel="bookmark" href="{% static '/images/favicon.ico' %}" />
     <script src="{% static '/prism/prism.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'prism/prism.css' %}"> 
+    <script src="{% static '/jquery/jquery.cookie.js' %}"></script>
+    <script src="{% static 'tapmodo-Jcrop/js/jquery.Jcrop.min.js' %}"></script>
     <script src="{% static '/js/vmaig.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'prism/prism.css' %}">   
     <link rel="stylesheet" href="{% static '/css/vmaig.css' %}">
     {% comment %} <link rel="stylesheet" href="{% static '/css/vmaig_comments.css' %}"> {% endcomment %}
-    <link rel="stylesheet" href="{% static '/css/auth.css' %}"> {% comment %}
-    <link rel="stylesheet" href="{% static '/jquery/jquery.Jcrop.min.css' %}">{% endcomment %}
-    <script src="{% static '/jquery/jquery.cookie.js' %}"></script>
-    {% comment %}
-    <script src="{% static '/jquery/jquery.Jcrop.min.js' %}"></script>{% endcomment %} 
+    <link rel="stylesheet" href="{% static '/css/auth.css' %}">
+    <link rel="stylesheet" href="{% static 'tapmodo-Jcrop/css/jquery.Jcrop.min.css' %}">
+    
+
+    
     {% block css%} {% endblock%}
 </head>
 

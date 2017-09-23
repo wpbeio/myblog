@@ -3,7 +3,11 @@ from django.db import models
 from django.conf import settings
 
 # Create your models here.
-
+# 导航条状态
+STATUS = {
+        0: u'开启',
+        1: u'关闭',
+}
 
 IS_READ = {
     0: u'未读',
@@ -49,4 +53,17 @@ class Link(models.Model):
 
     class Meta:
         verbose_name_plural = verbose_name = u'友情链接'
+        ordering = ['-create_time']
+
+class Nav(models.Model):
+    name = models.CharField(max_length=40, verbose_name=u'导航条内容')
+    url = models.CharField(max_length=200, blank=True, null=True,
+                           verbose_name=u'指向地址')
+
+    status = models.IntegerField(default=0, choices=STATUS.items(),
+                                 verbose_name=u'状态')
+    create_time = models.DateTimeField(u'创建时间', auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = verbose_name = u"导航条"
         ordering = ['-create_time']

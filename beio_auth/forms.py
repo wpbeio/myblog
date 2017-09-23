@@ -5,6 +5,7 @@ from django.contrib.auth.tokens import default_token_generator
 # from django.contrib.sites.models import get_current_site
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
+from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.mail import send_mail
 import base64
 import logging
@@ -41,22 +42,21 @@ class BeioUserCreationForm(forms.ModelForm):
         widget=forms.PasswordInput,
         error_messages={
             'required': u"密码未填"
-            }
+        }
     )
     password2 = forms.CharField(
         widget=forms.PasswordInput,
         error_messages={
             'required': u"确认密码未填"
-            }
+        }
     )
 
     class Meta:
         model = BeioUser
-        fields = ("username", "email")
+        fields = ("username", "email", 'date_of_birth')
 
     def clean_username(self):
-        # Since User.username is unique, this check is redundant,
-        # but it sets a nicer error message than the ORM. See #13147.
+
         username = self.cleaned_data["username"]
         try:
             BeioUser._default_manager.get(username=username)
@@ -71,7 +71,7 @@ class BeioUserCreationForm(forms.ModelForm):
         password2 = self.cleaned_data.get("password2")
         if password1 and password2 and password1 != password2:
             raise forms.ValidationError(
-                    self.error_messages["password_mismatch"]
+                self.error_messages["password_mismatch"]
             )
         return password2
 
@@ -95,7 +95,23 @@ class BeioUserCreationForm(forms.ModelForm):
         return user
 
 
-class BeioPasswordRestForm(forms.Form):
+class BeioChangeUserForm(forms.ModelForm):
+
+    # 用户修改界面
+
+    password = ReadOnlyPasswordHashField()
+
+    class Meta:
+        model = BeioUser
+        fields = ('username', 'email', 'password',
+                  'date_of_birth', 'is_active', 'is_admin')
+
+    def clean_password(self):
+
+        return self.initial["password"]
+
+
+class BeioPasswordRestForm(forms.ModelForm):
 
     # 错误信息
     error_messages = {
@@ -110,7 +126,7 @@ class BeioPasswordRestForm(forms.Form):
         error_messages={
             'invalid': u"该值只能包含字母、数字和字符@/./+/-/_",
             'required': u"用户名未填"}
-        )
+    )
     email = forms.EmailField(
         error_messages={
             'invalid':  u"email格式错误",

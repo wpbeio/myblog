@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class AuthConfig(AppConfig):
+class BeioAuthConfig(AppConfig):
     name = 'beio_auth'
-    verbose_name = r"博客用户管理"
+    verbose_name = r"用户管理"

@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+AUTH_USER_MODEL='beio_auth.BeioUser'
 # Application definition
 
 INSTALLED_APPS = [
@@ -148,5 +148,5 @@ STATICFILES_DIRS = (
 )
 STATIC_URL = '/static/'
 LOGIN_REDIRECT_URL = '/'
-WEBSITE_TITLE = '网站标题'
+WEBSITE_TITLE = '坐听风雨'
 WEBSITE_WELCOME='歡迎光臨'

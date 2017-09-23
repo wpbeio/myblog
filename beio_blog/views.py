@@ -8,7 +8,7 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.views.generic import View, TemplateView, ListView, DetailView
-from beio_system.models import Link, Notification
+from beio_system.models import Link, Notification, Nav
 
 import logging
 from django.conf import settings
@@ -49,7 +49,7 @@ class BaseMixin(object):
         return context
 
 
-class IndexView(ListView):
+class IndexView(BaseMixin, ListView):
     """首页列表"""
 
     template_name = 'blog/post_list.html'
@@ -140,7 +140,7 @@ class UserView(BaseMixin, TemplateView):
 #     return render(request, 'blog/post_list.html', {'posts': posts, 'page': True})
 
 
-class Post_Detail_View(DetailView):
+class Post_Detail_View(BaseMixin, DetailView):
     """详细页面视图"""
     model = Post
     template_name = 'beio_blog/post_detail.html'
