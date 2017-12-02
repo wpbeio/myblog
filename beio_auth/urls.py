@@ -5,5 +5,5 @@ from .import views
 
 urlpatterns = [
     url(r'^usercontrol/(?P<slug>\w+)$', UserControl.as_view()),
-    url(r'down/down', views.big_file_download, name='down'),
+    # url(r'down/down', views.big_file_download, name='down'),
 ]

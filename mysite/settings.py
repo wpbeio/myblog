@@ -146,6 +146,11 @@ STATICFILES_DIRS = (
     '/beio_blog/static/',
 
 )
+
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
 STATIC_URL = '/static/'
 LOGIN_REDIRECT_URL = '/'
 WEBSITE_TITLE = '坐听风雨'

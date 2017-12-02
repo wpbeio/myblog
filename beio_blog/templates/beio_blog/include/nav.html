@@ -5,6 +5,7 @@
 {% url 'user-view' 'changetx' as changetx_url%} 
 {% url 'user-view' 'changepassword' as changepassword_url%}
 {% url 'user-view' 'notification' as notification_url%}
+{% url 'user-view' 'down' as down%}
 
 <header id="vmaig-header" class="navbar navbar-inverse navbar-fixed-top navbar-vmaig">
     <div class="container">
@@ -41,7 +42,7 @@
                     </a>
                 </li>
                 <li id="leavemsg">
-                    <a href="{% url 'down' %}">
+                    <a href="{{down}}">
                         留言墙
                     </a>
                 </li>

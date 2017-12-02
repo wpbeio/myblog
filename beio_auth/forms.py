@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 # 参考自django.contrib.auth.forms.UserCreationForm
-class BeioUserCreationForm(forms.ModelForm):
+class UserCreationForm(forms.ModelForm):
 
     # 错误信息
     error_messages = {
@@ -53,7 +53,7 @@ class BeioUserCreationForm(forms.ModelForm):
 
     class Meta:
         model = BeioUser
-        fields = ("username", "email", 'date_of_birth')
+        fields = ("username", "email", )
 
     def clean_username(self):
 
@@ -88,14 +88,16 @@ class BeioUserCreationForm(forms.ModelForm):
         )
 
     def save(self, commit=True):
-        user = super(BeioUserCreationForm, self).save(commit=False)
+        user = super(UserCreationForm, self).save(commit=False)
         user.set_password(self.cleaned_data["password1"])
         if commit:
             user.save()
         return user
+# class UploadTxForm(forms.ModelForm):
+    
+    # 用户修改界面
 
-
-class BeioChangeUserForm(forms.ModelForm):
+class ChangeUserForm(forms.ModelForm):
 
     # 用户修改界面
 
@@ -104,14 +106,14 @@ class BeioChangeUserForm(forms.ModelForm):
     class Meta:
         model = BeioUser
         fields = ('username', 'email', 'password',
-                  'date_of_birth', 'is_active', 'is_admin')
+                  )
 
     def clean_password(self):
 
         return self.initial["password"]
 
 
-class BeioPasswordRestForm(forms.ModelForm):
+class PasswordRestForm(forms.ModelForm):
 
     # 错误信息
     error_messages = {

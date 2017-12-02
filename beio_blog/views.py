@@ -82,29 +82,20 @@ class IndexView(BaseMixin, ListView):
 
 
 class UserView(BaseMixin, TemplateView):
-    template_name = './beio_auth/user.html'
+    template_name = 'beio_auth/login.html'
 
     def get(self, request, *args, **kwargs):
 
         if not request.user.is_authenticated():
             logger.error(u'[UserView]用户未登陆')
-            return render(request, 'beio_blog/login.html')
-
+            return render(request, 'beio_auth/login.html')
         slug = self.kwargs.get('slug')
 
-        if slug == 'changetx':
-            self.template_name = 'beio_auth/changetx.html'
-        elif slug == 'changepassword':
-            self.template_name = 'beio_auth/changepassword.html'
-        elif slug == 'changeinfo':
-            self.template_name = 'beio_auth/changeinfo.html'
-        elif slug == 'message':
-            self.template_name = 'beio_auth/message.html'
-        elif slug == 'notification':
-            self.template_name = 'beio_auth/notification.html'
+
+        self.template_name = "beio_auth/" + slug + ".html"
+
 
         return super(UserView, self).get(request, *args, **kwargs)
-
         logger.error(u'[UserView]不存在此接口')
         raise Http404
 

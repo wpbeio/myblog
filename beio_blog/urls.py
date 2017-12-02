@@ -12,9 +12,9 @@ urlpatterns = [
     url(r'^post/(?P<pk>[0-9]+)/publish/$',
         views.post_publish, name='post_publish'),
     url(r'^user/(?P<slug>\w+)$', UserView.as_view(), name='user-view'),
-    url(r'^forgetpassword/$',
-        TemplateView.as_view(template_name="beio_blog/forgetpassword.html"),
-        name='forgetpassword-view'),
+    # url(r'^forgetpassword/$',
+    #     TemplateView.as_view(template_name="beio_auth/forgetpassword.html"),
+    #     name='forgetpassword-view'),
     url(r'^post/(?P<pk>[0-9]+)/edit/$', views.post_edit, name='post_edit'),
     url(r'^post/(?P<pk>[0-9]+)/reve/$', views.post_remove, name='post_remove'),
 ]

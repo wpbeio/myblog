@@ -11,7 +11,8 @@ from django.contrib.auth.tokens import default_token_generator
 # from django.contrib.sites.models import get_current_site
 from django.utils.http import (base36_to_int, is_safe_url,
                                urlsafe_base64_decode, urlsafe_base64_encode)
-from .forms import BeioUserCreationForm, BeioPasswordRestForm
+from .forms import UserCreationForm, PasswordRestForm
+from django.core.files.base import ContentFile
 from .models import BeioUser
 from beio_system.models import Notification
 import time
@@ -22,30 +23,31 @@ import json
 import base64
 import logging
 
+
 logger = logging.getLogger(__name__)
 
 # Create your views here.
 
 
-def big_file_download(request):
-    # do something...
+# def big_file_download(request):
+#     # do something...
 
-    def file_iterator(file_name, chunk_size=512):
-        with open(file_name) as f:
-            while True:
-                c = f.read(chunk_size)
-                if c:
-                    yield c
-                else:
-                    break
+#     def file_iterator(file_name, chunk_size=512):
+#         with open(file_name) as f:
+#             while True:
+#                 c = f.read(chunk_size)
+#                 if c:
+#                     yield c
+#                 else:
+#                     break
 
-    the_file_name = "upload/2017/03/01/haha.docx"
-    response = StreamingHttpResponse(file_iterator(the_file_name))
-    response['Content-Type'] = 'application/octet-stream'
-    response['Content-Disposition'] = 'attachment;filename="{0}"'.format(
-        the_file_name)
+#     the_file_name = "upload/2017/03/01/haha.docx"
+#     response = StreamingHttpResponse(file_iterator(the_file_name))
+#     response['Content-Type'] = 'application/octet-stream'
+#     response['Content-Disposition'] = 'attachment;filename="{0}"'.format(
+#         the_file_name)
 
-    return response
+#     return response
 
 
 class UserControl(View):
@@ -114,7 +116,7 @@ class UserControl(View):
         password2 = self.request.POST.get("password2", "")
         email = self.request.POST.get("email", "")
 
-        form = BeioUserCreationForm(request.POST)
+        form = UserCreationForm(request.POST)
 
         errors = []
         # 验证表单是否正确
@@ -133,7 +135,7 @@ class UserControl(View):
             ])
             from_email = "13618631329@163.com"
             try:
-                send_mail(title, message, from_email, [email])
+                # send_mail(title, message, from_email, [email])
                 logger.error(current_site)
                 new_user = form.save()
                 user = auth.authenticate(username=username, password=password2)
@@ -186,7 +188,7 @@ class UserControl(View):
         username = self.request.POST.get("username", "")
         email = self.request.POST.get("email", "")
 
-        form = VmaigPasswordRestForm(request.POST)
+        form = PasswordRestForm(request.POST)
 
         errors = []
 
@@ -261,6 +263,8 @@ class UserControl(View):
 
         # 本地保存头像
         data = request.POST['tx']
+        # file_content = ContentFile(request.FILES['upload_tx'].read())
+        # img = request.FILES['upload_tx']
         if not data:
             logger.error(
                 u'[UserControl]用户上传头像为空:[%s]'.format(
@@ -270,83 +274,96 @@ class UserControl(View):
             return HttpResponse(u"上传头像错误", status=500)
 
         imgData = base64.b64decode(data)
+        filename = "images/tx/tx_100x100_{}.jpg".format(request.user.id)
+        filedir = "media/"
 
-        filename = "tx_100x100_{}.jpg".format(request.user.id)
-        filedir = "/static/images/tx/"
-        static_root = getattr(settings, 'STATIC_ROOT', None)
-        if static_root:
-            filedir = os.path.join(static_root, 'tx')
         if not os.path.exists(filedir):
             os.makedirs(filedir)
-
+        # baseDir = os.path.dirname(os.path.abspath(__name__))
         path = os.path.join(filedir, filename)
 
-        file = open(path, "wb+")
-        file.write(imgData)
-        file.flush()
-        file.close()
+        # path = "media/images/tx/tx_100x100_{}.jpg".format(request.user.id)
+        try:
+            with open(path, 'wb+')as destination:
+                destination.write(imgData)
+
+            im = Image.open(path)
+            out = im.resize((100, 100), Image.ANTIALIAS)
+            out.save(path)
+            request.user.img = "/media/" + filename
+            request.user.save()
+            return HttpResponse(u"上传头像成功!\n")
+        # file = open(path, "wb+")
+        # file.write(imgData)
+        # file.flush()
+        # file.close()
 
         # 修改头像分辨率
-        im = Image.open(path)
-        out = im.resize((100, 100), Image.ANTIALIAS)
-        out.save(path)
-
-        # 选择上传头像到七牛还是本地
-        try:
-            # 上传头像到七牛
-            import qiniu
-
-            qiniu_access_key = settings.QINIU_ACCESS_KEY
-            qiniu_secret_key = settings.QINIU_SECRET_KEY
-            qiniu_bucket_name = settings.QINIU_BUCKET_NAME
-
-            assert qiniu_access_key and qiniu_secret_key and qiniu_bucket_name
-            q = qiniu.Auth(qiniu_access_key, qiniu_secret_key)
-
-            key = filename
-            localfile = path
-
-            mime_type = "text/plain"
-            params = {'x:a': 'a'}
-
-            token = q.upload_token(qiniu_bucket_name, key)
-            ret, info = qiniu.put_file(token, key, localfile,
-                                       mime_type=mime_type, check_crc=True)
-
-            # 图片连接加上 v?时间  是因为七牛云缓存，图片不能很快的更新，
-            # 用filename?v201504261312的形式来获取最新的图片
-            request.user.img = "http://{}/{}?v{}".format(
-                settings.QINIU_URL,
-                filename,
-                time.strftime('%Y%m%d%H%M%S')
-            )
-            request.user.save()
-
-            # 验证上传是否错误
-            if ret['key'] != key or ret['hash'] != qiniu.etag(localfile):
-                logger.error(
-                    u'[UserControl]上传头像错误：[{}]'.format(
-                        request.user.username
-                    )
-                )
-                return HttpResponse(u"上传头像错误", status=500)
-
-            return HttpResponse(u"上传头像成功!\n(注意有10分钟缓存)")
-
         except Exception as e:
-            request.user.img = "/static/images/tx/" + filename
-            request.user.save()
-
-            # 验证上传是否错误
             if not os.path.exists(path):
                 logger.error(
                     u'[UserControl]用户上传头像出错:[{}]'.format(
                         request.user.username
                     )
                 )
-                return HttpResponse(u"上传头像错误", status=500)
+            return HttpResponse(u"上传头像错误", status=500)
 
-            return HttpResponse(u"上传头像成功!\n(注意有10分钟缓存)")
+        # # 选择上传头像到七牛还是本地
+        # try:
+        #     # 上传头像到七牛
+        #     import qiniu
+
+        #     qiniu_access_key = settings.QINIU_ACCESS_KEY
+        #     qiniu_secret_key = settings.QINIU_SECRET_KEY
+        #     qiniu_bucket_name = settings.QINIU_BUCKET_NAME
+
+        #     assert qiniu_access_key and qiniu_secret_key and qiniu_bucket_name
+        #     q = qiniu.Auth(qiniu_access_key, qiniu_secret_key)
+
+        #     key = filename
+        #     localfile = path
+
+        #     mime_type = "text/plain"
+        #     params = {'x:a': 'a'}
+
+        #     token = q.upload_token(qiniu_bucket_name, key)
+        #     ret, info = qiniu.put_file(token, key, localfile,
+        #                                mime_type=mime_type, check_crc=True)
+
+        #     # 图片连接加上 v?时间  是因为七牛云缓存，图片不能很快的更新，
+        #     # 用filename?v201504261312的形式来获取最新的图片
+        #     request.user.img = "http://{}/{}?v{}".format(
+        #         settings.QINIU_URL,
+        #         filename,
+        #         time.strftime('%Y%m%d%H%M%S')
+        #     )
+        #     request.user.save()
+
+        #     # 验证上传是否错误
+        #     if ret['key'] != key or ret['hash'] != qiniu.etag(localfile):
+        #         logger.error(
+        #             u'[UserControl]上传头像错误：[{}]'.format(
+        #                 request.user.username
+        #             )
+        #         )
+        #         return HttpResponse(u"上传头像错误", status=500)
+
+        #     return HttpResponse(u"上传头像成功!\n(注意有10分钟缓存)")
+
+        # except Exception as e:
+        #     request.user.img = "/static/images/tx/" + filename
+        #     request.user.save()
+
+        #     # 验证上传是否错误
+        #     if not os.path.exists(path):
+        #         logger.error(
+        #             u'[UserControl]用户上传头像出错:[{}]'.format(
+        #                 request.user.username
+        #             )
+        #         )
+        #         return HttpResponse(u"上传头像错误", status=500)
+
+        #     return HttpResponse(u"上传头像成功!\n(注意有10分钟缓存)")
 
     def notification(self, request):
         if not request.user.is_authenticated():
