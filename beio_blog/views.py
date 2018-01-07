@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, Http404
 from .models import Post
+from django.contrib import auth
 from beio_comments.models import Comment
 from .forms import PostForm
 from django.core.urlresolvers import reverse
@@ -85,16 +86,19 @@ class UserView(BaseMixin, TemplateView):
     template_name = 'beio_auth/login.html'
 
     def get(self, request, *args, **kwargs):
-
+        slug = self.kwargs.get('slug')
+        if slug in ["forgetpassword", "register", "login"]:
+            self.template_name = "beio_auth/" + slug + ".html"
+            return render(request, "beio_auth/" + slug + ".html")
         if not request.user.is_authenticated():
             logger.error(u'[UserView]用户未登陆')
             return render(request, 'beio_auth/login.html')
-        slug = self.kwargs.get('slug')
-
-
-        self.template_name = "beio_auth/" + slug + ".html"
-
-
+        if slug == "logout":
+            auth.logout(request)
+            return render(request, 'beio_auth/login.html')
+        if slug in ["logout", "changepassword", "changetx"]:
+            self.template_name = "beio_auth/" + slug + ".html"
+            return render(request, "beio_auth/" + slug + ".html")
         return super(UserView, self).get(request, *args, **kwargs)
         logger.error(u'[UserView]不存在此接口')
         raise Http404

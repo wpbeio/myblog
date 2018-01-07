@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
     <title>{{website_title}}</title>
     {% load staticfiles %}
-    {% url 'user-view' 'logout' as logout%} 
+    {% url 'user-view' 'logout' as logout_url%} 
     {% comment %} {% url 'user-view' 'login' as login_url%} {% endcomment %}
     {% url 'user-view' 'changetx' as changetx_url %} 
     {% url 'user-view' 'changepassword' as changepassword_url %} 

@@ -1,10 +1,10 @@
 from django.conf.urls import url
 from . import views
-from .views import IndexView, TemplateView,Post_Detail_View, UserView, View
+from .views import IndexView, TemplateView, Post_Detail_View, UserView, View
 # 正则只负责生产链接，实际的作用操作由后面的方法实现， name作为html链接后台方法关键字
 urlpatterns = [
     # url(r'^$', views.post_list),
-    url(r'^$', IndexView.as_view()),
+    url(r'^$', IndexView.as_view(), name='index-view'),
     url(r'^post/(?P<pk>[0-9]+)/$', views.post_detail, name='post_detail'),
     url(r'^post/(?P<pk>[0-9]+)/$', Post_Detail_View.as_view()),
     url(r'^post/new/$', views.post_new, name='post_new'),

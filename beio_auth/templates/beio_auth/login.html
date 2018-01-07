@@ -1,7 +1,8 @@
 {% extends 'beio_auth/base.html' %}
 {% block main %} 
-{% url 'forgetpassword-view' as forgetpassword_url %} 
-{% url 'register-view' as register_url %}
+
+{% url "user-view" 'forgetpassword' as forgetpassword_url %} 
+{% url "user-view" 'register' as register_url %}
 <div id="auth-login">
     <div class="panel panel-auth">
         <div class="panel-heading">
@@ -25,9 +26,9 @@
                     <input id="auth-login-password" type="password" class="form-control">
                 </div>
             </div>
-            <div id="auth-forgetpassword"><a href="{ forgetpassword_url }">忘记密码?</a></div>
+            <div id="auth-forgetpassword"><a href="{{ forgetpassword_url }}">忘记密码?</a></div>
             <button id="auth-login-button" type="submit" class="btn btn-auth pull-left">登录</button>
-            <a href="{ register_url }" type="button" class="btn btn-auth pull-right">注册</a>
+            <a href="{{register_url}}" type="button" class="btn btn-auth pull-right">注册</a>
         </form>
     </div>
 </div>

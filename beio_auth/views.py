@@ -57,7 +57,7 @@ class UserControl(View):
         if slug == "logout":
             return self.logout(request)
 
-        return render(request, 'auth/' + slug + '.html')
+        return render(request, 'beio_auth/' + slug + '.html')
 
         raise PermissionDenied
 
@@ -91,7 +91,7 @@ class UserControl(View):
 
         errors = []
 
-        if user is not None:
+        if user is not None and user.is_active:
             auth.login(request, user)
         else:
             errors.append(u"密码或者用户名不正确")
@@ -125,21 +125,26 @@ class UserControl(View):
             # current_site="qwe"
             # site_name = current_site.name
             # domain = current_site.domain
-            title = u"欢迎来到 {} ！".format("qe")
+            token =default_token_generator(username)
+            title = u"欢迎来到 {} ！".format(settings.WEBSITE_TITLE)
             message = "".join([
                 u"你好！ {} ,感谢注册 {} ！\n\n".format(username, current_site),
                 u"请牢记以下信息：\n",
                 u"用户名：{}\n".format(username),
                 u"邮箱：{}\n".format(email),
-                u"网站：http://{}\n\n".format(current_site),
+                u"网站：http://{}\n\n".format(settings.DOMAIN),
+                u'请访问该链接，完成用户验证:'.join([settings.DOMAIN, 'activate', token])
             ])
-            from_email = "13618631329@163.com"
+            from_email = settings.DEFAULT_FROM_EMAIL
             try:
-                # send_mail(title, message, from_email, [email])
+
                 logger.error(current_site)
                 new_user = form.save()
-                user = auth.authenticate(username=username, password=password2)
-                auth.login(request, user)
+
+                new_user.email_user(title, message, from_email)
+                '''登陆系统'''
+                # user = auth.authenticate(username=username, password=password2)
+                # auth.login(request, user)
             except Exception as e:
                 logger.error(
                     u'[UserControl]用户注册邮件发送失败:[{}]/[{}]'.format(

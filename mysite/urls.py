@@ -24,7 +24,7 @@ urlpatterns = [
     url(r'', include('beio_blog.urls')),
     url(r'', include('beio_comments.urls')),
     url(r'', include('beio_auth.urls')),
-    url(r'', include('beio_comments.urls')),
+    # url(r'', include('beio_comments.urls')),
     # url(r'^accounts/login/$', auth_views.login, name='login'),
     # url(r'^accounts/logout/$', auth_views.logout, name='logout'),
     url(r'^inbox/notifications/', include('notifications.urls')),
