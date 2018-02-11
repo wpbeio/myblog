@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'tagging',
     'beio_comments',
     'beio_system',
+    'django_forms_bootstrap',
     # 'notifications',
     
 

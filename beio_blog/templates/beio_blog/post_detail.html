@@ -1,41 +1,22 @@
-{% extends 'beio_base.html' %}
+{% extends 'beio_blog/base.html' %} {% block main %}
+<div class="post">
+    <h1>{{ post.title }}</h1>
+    <div class="date">
+        {% if post.published_date %} 发布时间：{{ post.published_date | date:'Y-m-d' }} {% endif %} {% if user.is_authenticated %}
 
-{% block content %}
-    <div class="row">
-        <div id="mainbody" class="col-md-8">
-            <div class="post">
-                <h1>{{ post.title }}</h1>
-                <div class="date">
-                    {% if post.published_date %}
-                        发布时间：{{ post.published_date | date:'Y-m-d' }}
-                    {% endif %}
+        <a class="btn btn-default" href="{% url 'post_edit' pk=post.pk %}">
+            <span class="glyphicon glyphicon-pencil"></span>
+        </a>
+        <a class="btn btn-default" href="{% url 'post_remove' pk=post.pk %}">
+            <span class="glyphicon glyphicon-remove"></span>
+        </a>
+        {% if post.published_date %} {% else %}
+        <a class="btn btn-default" href="{% url 'post_publish' pk=post.pk %}">
+            发布
+        </a>
+        {% endif %} {% endif %}
+    </div>
+    <p class="text">{{ post.content | safe }}</p>
+</div>
 
-                    {% if user.is_authenticated %}
-
-                        <a class="btn btn-default" href="{% url 'post_edit' pk=post.pk %}">
-                            <span class="glyphicon glyphicon-pencil"></span>
-                        </a>
-                        <a class="btn btn-default" href="{% url 'post_remove' pk=post.pk %}">
-                            <span class="glyphicon glyphicon-remove"></span>
-                        </a>
-                        {% if post.published_date %}
-                        {% else %}
-                            <a class="btn btn-default" href="{% url 'post_publish' pk=post.pk %}">
-                                发布
-                            </a>
-                        {% endif %}
-                    {% endif %}
-                </div>
-                <p class="text">{{ post.content | safe }}</p>
-            </div>
-
-            {% include "comments/comments.html"%}
-
-
-        </div>
-        <div class="col-md-4">
-            {% include 'comments/latest_comments.html' %}
-        </div>
-
-
-{% endblock content %}
+{% include "beio_comments/comments.html"%} {% endblock main %}

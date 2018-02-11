@@ -46,8 +46,8 @@ class Category(models.Model):
     status = models.IntegerField(default=0, choices=STATUS.items())
     create_time = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
 
-    img = models.FileField(
-        upload_to='./upload/img/category/', verbose_name='上传图片')
+    # img = models.FileField(
+    #     upload_to='./upload/img/category/', verbose_name='上传图片')
 
     class Meta:
         # verbose_name_plural为指定名称的复数类

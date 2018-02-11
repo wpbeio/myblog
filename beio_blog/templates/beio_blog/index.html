@@ -1,9 +1,7 @@
-{% extends "beio_blog/base.html" %}
+{% extends "beio_blog/base.html" %} {% block main %}
 
-{%block main%}
-    <div id="vmaig-content" class="col-md-8 col-lg-9">
-        <!-- 警告框 -->
-        <!--<div class="well alert hidden-xs fade in">
+<!-- 警告框 -->
+<!--<div class="well alert hidden-xs fade in">
             <button class="close" data-dismiss="alert" type="button">&times;</button>
             {{website_welcome}}
         </div>
@@ -18,28 +16,19 @@
                 </form>
             </div>
         </div>-->
-        <!-- 首页文章列表 -->
-        <div id="home-post-list">
-            <!-- 首页轮播 -->
-            <!--{% if carousel_page_list%}
+<!-- 首页文章列表 -->
+<div id="home-post-list">
+    <!-- 首页轮播 -->
+    <!--{% if carousel_page_list%}
             {% include "./blog/include/carousel.html"%}
             {% endif%}-->
 
-            <!--首页文章列表 -->
-            {% if post-list %}
-            {% with article_list=post-list %}
-            {% for post in article_list %}
-                {% include "./blog/include/home_post.html" %}
-            {% endfor %}
-            {% endwith %}
-            {% endif %}
+    <!--首页文章列表 -->
+    {% if posts %} {% with article_list=posts %} {% for post in article_list %} 
+    {% include "beio_blog/include/home_post.html"%} {% endfor %} {% endwith %} {% endif %}
 
-            <!--分页 -->
-            {% if page_obj%}
-            {% include "./blog/include/pagination.html"%}
-            {% endif %}
-        </div>
-    </div>
-
+    <!--分页 -->
+    {% if page_obj%} {% include "beio_blog/include/pagination.html"%} {% endif %}
+</div>
 
 {% endblock %}

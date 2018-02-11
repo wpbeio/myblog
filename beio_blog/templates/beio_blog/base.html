@@ -6,8 +6,8 @@
     <!--手机html -->
     <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
     <title>{{website_title}}</title>
-    {% load staticfiles %} {% comment %}本地样式{% endcomment %}
-    {% comment %}<link rel="stylesheet" href="{% static '/bootstrap/css/bootstrap.min.css' %}" />
+    {% load staticfiles %} {% comment %}本地样式{% endcomment %} {% comment %}
+    <link rel="stylesheet" href="{% static '/bootstrap/css/bootstrap.min.css' %}" />
     <link rel="stylesheet" href="{% static '/bootstrap/css/bootstrap-theme.min.css' %}" />
     <script src="{% static 'jquery/jquery.min.js' %}"></script>
     <script src="{% static '/bootstrap/js/bootstrap.min.js' %}"></script>{% endcomment %}
@@ -25,7 +25,7 @@
     <link rel="shortcut icon" href="{% static '/images/favicon.ico' %}" />
     <link rel="bookmark" href="{% static '/images/favicon.ico' %}" />
     <script src="{% static '/prism/prism.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'prism/prism.css' %}"> 
+    <link rel="stylesheet" href="{% static 'prism/prism.css' %}">
     <script src="{% static '/js/vmaig.js' %}"></script>
     <link rel="stylesheet" href="{% static '/css/vmaig.css' %}"> {% comment %}
     <link rel="stylesheet" href="{% static '/css/vmaig_comments.css' %}">
@@ -43,17 +43,21 @@
     <div id="vmaig-main">
         <div id="vmaig-content" class="container">
             <div class="row">
-                {%block main%} {% endblock %}
+                <div  class="col-md-8 col-ls-9">
+                    {% block main %} {% endblock %}
+                </div>
                 <!-- 右边的widgets -->
-                <div id="vmaig-side" class="col-md-4 col-lg-3 hidden-xs">
-                    {% comment %}{% include "./blog/widgets/tags_cloud.html"%} {% include "./beio_blog/widgets/search.html"%} {% include "./blog/widgets/hotest_posts.html"%}
-                    {% include "./vmaig_comments/latest_comments.html"%} {% include "./blog/widgets/links.html"%}{% endcomment %}
+                <div  class="col-md-4 col-lg-3 hidden-xs">
+                    {% include "beio_comments/latest_comments.html"%}
+
                 </div>
             </div>
         </div>
         <footer>
             <div class="container">
-                <p class="text-center">基于Dajngo1.10,Bootsratp3, <a href="/">网站地图</a></p>
+                <p class="text-center">基于Dajngo1.10,Bootsratp3,
+                    <a href="/">网站地图</a>
+                </p>
             </div>
         </footer>
     </div>
@@ -61,7 +65,6 @@
 </body>
 
 
-{% comment %} <script type="text/javascript" src="{% static '/js/vmaig.js' %}"></script> {% endcomment %}
-{% block js%}{% endblock%}
+{% block js%}{% endblock js%}
 
 </html>

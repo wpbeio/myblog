@@ -53,15 +53,15 @@ class BaseMixin(object):
 class IndexView(BaseMixin, ListView):
     """首页列表"""
 
-    template_name = 'blog/post_list.html'
+    template_name = 'beio_blog/index.html'
     context_object_name = 'posts'
     model = Post
     paginate_by = 3
     # paginator_class = <class 'django.core.paginator.Paginator'>
 
     def get_queryset(self, *args, **kwargs):
-        posts = Post.objects.filter(
-            published_date__isnull=False).order_by('-published_date')
+        # posts = Post.objects.filter(published_date__isnull=False).order_by('-published_date')
+        posts = Post.objects.order_by('-published_date')
         # paginator = Paginator(posts, 3)
 
         # page = self.kwargs.get('page',1)
@@ -153,6 +153,11 @@ class Post_Detail_View(BaseMixin, DetailView):
         return super(Post_Detail_View, self).get_context_data(**kwargs)
 
 
+# class post_new_view(BaseMixin,DetailView):
+#     def __init__(self, *args):
+#         super(post_new_view, self).__init__(*args))
+
+
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
     comment_list = Post.objects.get(pk=pk).comment_set.all()
@@ -166,13 +171,14 @@ def post_new(request):
     if request.method == 'POST':
         form = PostForm(request.POST)
         if form.is_valid():
+            post.summary= post.context  if post.context.len>20 else post.context[0:15]
             post = form.save(commit=False)
             post.author = request.user
             if request.POST['flag'] == '1':
                 post.publish()
             else:
                 post.save()
-            return redirect(post_detail, pk=post.pk)
+            return redirect(Post_Detail_View.context_object_name(pk=post.pk))
     else:
         form = PostForm()
     return render(request, 'beio_blog/post_edit.html', {'form': form})

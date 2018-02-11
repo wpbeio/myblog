@@ -6,7 +6,7 @@ urlpatterns = [
     # url(r'^$', views.post_list),
     url(r'^$', IndexView.as_view(), name='index-view'),
     url(r'^post/(?P<pk>[0-9]+)/$', views.post_detail, name='post_detail'),
-    url(r'^post/(?P<pk>[0-9]+)/$', Post_Detail_View.as_view()),
+    # url(r'^category/(?P<pk>[0-9]+)/$', category-detail-view.as_view(),name="category_postlist"),
     url(r'^post/new/$', views.post_new, name='post_new'),
     url(r'^drafts/$', views.post_draft_list, name='post_draft_list'),
     url(r'^post/(?P<pk>[0-9]+)/publish/$',
