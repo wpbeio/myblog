@@ -43,7 +43,7 @@
                     {{comment.text}}
                     {% endautoescape %}
                 </p>
-                <p>{{comment.create_time|date:"Y-m-d H:i:s" }} &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <a class='quote' href="#anchor-quote" onclick="return CommentQuote('{{comment.user.username}}',{{comment.id}});">回复</a></p>
+                <p>{{comment.create_time|date:"Y-m-d H:i:s" }}  <a class='quote' href="#anchor-quote" onclick="return CommentQuote('{{comment.user.username}}',{{comment.id}});">回复</a></p>
             </div>
             </li>
             {% endfor%}
