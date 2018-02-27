@@ -2,10 +2,8 @@
     <div class="comment">
         <div class="comment-tx">
             {% if user.img%}
-            <img src="{{user.img}}" width="40"/>
-            {%else%}
-            <img src="http://vmaig.qiniudn.com/image/tx/tx-default.jpg" width="40"/>
-            {%endif%}
+            <img src="{{user.img}}" width="40" /> {%else%}
+            <img src="http://vmaig.qiniudn.com/image/tx/tx-default.jpg" width="40" /> {%endif%}
         </div>
         <div class="comment-edit clearfix">
             <form id="comment-form" method="post" role="form">
@@ -17,34 +15,31 @@
         <ul>
             {% for comment in comment_list%}
             <li>
-            <div class="comment-tx">
-                {% if comment.user.img %}
-                <img src={{comment.user.img}} width="40"/>
-                {%else%}
-                <img src="http://vmaig.qiniudn.com/image/tx/tx-default.jpg" width="40"/>
-                {%endif%}
-            </div>
-            <div class="comment-content">
-                <a><h1>{{comment.user.username}}</h1></a>
-                {% if comment.parent %}
-                <div class="comment-quote">
-                    <p>
-                        <a>@{{comment.parent.user.username}}：</a>
-                        {% autoescape on %}
-                        {{comment.parent.text}}
-                        {% endautoescape %}
-                    </p>
+                <div class="comment-tx">
+                    {% if comment.user.img %}
+                    <img src={{comment.user.img}} width="40" /> {%else%}
+                    <img src="http://vmaig.qiniudn.com/image/tx/tx-default.jpg" width="40" /> {%endif%}
                 </div>
-                {% endif %}
-                <p></p>
-                <p>
-                    评论：
-                    {% autoescape on %}
-                    {{comment.text}}
-                    {% endautoescape %}
-                </p>
-                <p>{{comment.create_time|date:"Y-m-d H:i:s" }}  <a class='quote' href="#anchor-quote" onclick="return CommentQuote('{{comment.user.username}}',{{comment.id}});">回复</a></p>
-            </div>
+                <div class="comment-content">
+                    <a>
+                        <h1>{{comment.user.username}}</h1>
+                    </a>
+                    {% if comment.parent %}
+                    <div class="comment-quote">
+                        <p>
+                            <a>@{{comment.parent.user.username}}：</a>
+                            {% autoescape on %} {{comment.parent.text}} {% endautoescape %}
+                        </p>
+                    </div>
+                    {% endif %}
+                    <p></p>
+                    <p>
+                        评论： {% autoescape on %} {{comment.text}} {% endautoescape %}
+                    </p>
+                    <!-- <p>{{comment.create_time|date:"Y-m-d H:i:s" }}
+                                            <a class='quote' href="#anchor-quote" onclick="return CommentQuote('{{comment.user.username}}',{{comment.id}});">回复</a>
+                                        </p> -->
+                </div>
             </li>
             {% endfor%}
         </ul>
@@ -58,29 +53,29 @@
     //     comment.setSelectionRange(comment.value.length, comment.value.length);
     // };
 
-    $('#comment-form').submit(function(){
+    $('#comment-form').submit(function () {
         $.ajax({
-            type:"POST",
-            url:"/comment/{{post.pk}}",
+            type: "POST",
+            url: "/comment/{{post.pk}}",
             // headers: {"X-CSRFToken": csrftoken},
-            data:{
-                "comment":$("#comment").val(),
+            data: {
+                "comment": $("#comment").val(),
                 // "X-CSRFToken":$.cookie('csrftoken')
-                },
-
-            beforeSend:function(xhr){
-                xhr.setRequestHeader("X-CSRFToken", $.cookie('csrftoken'));  
             },
-            success:function(data,textStatus){
+
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("X-CSRFToken", $.cookie('csrftoken'));
+            },
+            success: function (data, textStatus) {
                 $("#comment").val("");
                 $(".comment ul").prepend(data);
             },
-            error:function(XMLHttpRequest, textStatus, errorThrown){
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
                 alert(XMLHttpRequest.responseText);
 
             }
 
         });
         return false;
-    }); 
+    });
 </script>

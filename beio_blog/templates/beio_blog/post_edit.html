@@ -1,7 +1,4 @@
- {% extends "beio_blog/base.html" %}
-  
- {% load staticfiles %} 
- {% block js %}
+ {% extends "beio_blog/base.html" %} {% load staticfiles %} {% block js %}
 <link rel="stylesheet" href="{% static 'tinymce/jquery.tinymce.min.js' %}">
 <script type="text/javascript" src="{% static 'tinymce/tinymce.min.js' %}">
 </script>
@@ -72,24 +69,29 @@
 <script type="text/javascript">
     function save() {
         document.getElementById("flag").value = '0';
-        document.getElementById("myform").submit();
+        //document.getElementById("myform").submit();
+
     }
 
     function publish() {
         document.getElementById("flag").value = '1';
-        document.getElementById("myform").submit();
+        //document.getElementById("myform").submit();
+
     }
 </script>
 {% endblock js%}
 
 <!-- {% load bootstrap_tags %} -->
-{% block main %} 
+{% block main %} {% url 'post_create' as create %} {% url 'post_edit' post.pk as edit %}
 <div class="well">
-<h1>新增博文</h1>
-<form method="POST" class="post-form" id="myform"> {% csrf_token %} {{ form|as_bootstrap }}
-    <input type="hidden" name="flag" id="flag">
-    <button type="button" onclick="save()" class="save btn btn-default">存为草稿</button>
-    <button type="button" onclick="publish()" class="save btn btn-default">发布</button>
-</form>
+    <h1>新增博文</h1>
+    <form method="POST" class="post-form" id="myform"> {% csrf_token %} {{ form|as_bootstrap }}
+        <input type="hidden" name="flag" id="flag">
+        <input type="hidden" name="flag" id="flag">
+        <button type="button" onclick="javascrtpt:window.location.href='{{ create }}'" class="save btn btn-default">存为草稿</button>
+        <!-- <button type="button" onclick="publish();window.location.href={{ create }};" class="save btn btn-default">发布</button> -->
+        <input type="submit" value="保存" onclick="javascrtpt:window.location.href='{{ create }}'" class="save btn btn-default"/>
+    </form>
 </div>
+
 {% endblock main %}

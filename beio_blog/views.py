@@ -8,7 +8,7 @@ from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
-from django.views.generic import View, TemplateView, ListView, DetailView
+from django.views.generic import View, TemplateView, ListView, DetailView, FormView, DeleteView, CreateView
 from beio_system.models import Link, Notification, Nav
 
 import logging
@@ -60,8 +60,9 @@ class IndexView(BaseMixin, ListView):
     # paginator_class = <class 'django.core.paginator.Paginator'>
 
     def get_queryset(self, *args, **kwargs):
-        # posts = Post.objects.filter(published_date__isnull=False).order_by('-published_date')
-        posts = Post.objects.order_by('-published_date')
+        posts = Post.objects.filter(
+            published_date__isnull=False).order_by('-published_date')
+        # posts = Post.objects.order_by('-published_date')
         # paginator = Paginator(posts, 3)
 
         # page = self.kwargs.get('page',1)
@@ -153,9 +154,28 @@ class Post_Detail_View(BaseMixin, DetailView):
         return super(Post_Detail_View, self).get_context_data(**kwargs)
 
 
-# class post_new_view(BaseMixin,DetailView):
-#     def __init__(self, *args):
-#         super(post_new_view, self).__init__(*args))
+class Post_Add_View(BaseMixin, FormView):
+    template_name = 'beio_blog/post_edit.html'
+    form_class = PostForm
+
+
+class Post_Create_View(BaseMixin, CreateView):
+    model = Post
+    # template_name = 'beio_blog/post_detail.html'
+    form_class = PostForm
+    # success_url = reverse("post_detail", kwargs={'pk': self.object.pk})
+
+    def form_valid(self, form):
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.summary = post.context if post.summary == '' else post.context[0:15]
+            post.author = self.request.user
+            if request.POST['flag'] == '1':
+                post.publish()
+            else:
+                post.save()
+            # return redirect(reverse("post_detail", arg=(post.pk,)))
+        return super(Post_new_view, self).form_valid(form)
 
 
 def post_detail(request, pk):
@@ -171,14 +191,16 @@ def post_new(request):
     if request.method == 'POST':
         form = PostForm(request.POST)
         if form.is_valid():
-            post.summary= post.context  if post.context.len>20 else post.context[0:15]
+
             post = form.save(commit=False)
+            post.summary = post.context if post.summary == '' else post.context[0:15]
             post.author = request.user
             if request.POST['flag'] == '1':
                 post.publish()
             else:
                 post.save()
-            return redirect(Post_Detail_View.context_object_name(pk=post.pk))
+            return redirect(reverse("post_detail", arg=(post.pk,)))
+            # return render(request,'beio_blog/post_edit.html',)
     else:
         form = PostForm()
     return render(request, 'beio_blog/post_edit.html', {'form': form})
@@ -200,11 +222,11 @@ def post_publish(request, pk):
     return redirect(post_detail, pk=pk)
 
 
+@login_required
 def post_remove(request, pk):
-
     post = get_object_or_404(Post, pk=pk)
     post.delete()
-    return redirect(post_list)
+    return redirect('/')
 
 
 @login_required

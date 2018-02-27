@@ -32,8 +32,12 @@
     <link rel="stylesheet" href="{% static '/css/vmaig_auth.css' %}">{% endcomment %} {% comment %}
     <link rel="stylesheet" href="{% static '/jquery/jquery.Jcrop.min.css' %}">{% endcomment %}
     <script src="{% static '/jquery/jquery.cookie.js' %}"></script>
-    {% comment %}
-    <script src="{% static '/jquery/jquery.Jcrop.min.js' %}"></script>{% endcomment %} {% block css%} {% endblock%}
+    <!--
+    
+    <script src="{% static '/jquery/jquery.Jcrop.min.js' %}"></script> -->
+
+
+    {% block css%} {% endblock%}
 </head>
 
 <body id="vmaig">
@@ -43,14 +47,15 @@
     <div id="vmaig-main">
         <div id="vmaig-content" class="container">
             <div class="row">
-                <div  class="col-md-8 col-ls-9">
+                <div id="content" class=" col-md-8 col-ls-9 flex" style=" padding-bottom: 30px;">
                     {% block main %} {% endblock %}
                 </div>
                 <!-- 右边的widgets -->
-                <div  class="col-md-4 col-lg-3 hidden-xs">
+                {%if latest_comment_list%}
+                <div id="vmaig-side" class="col-md-4 col-lg-3 hidden-xs">
                     {% include "beio_comments/latest_comments.html"%}
-
                 </div>
+                {%endif%}
             </div>
         </div>
         <footer>
@@ -66,5 +71,13 @@
 
 
 {% block js%}{% endblock js%}
+<script>
+    $(function () {
+        var is_hide = $('#vmaig-side');
+        if (is_hide.length <= 0) { // 隐藏
+            $('#content').removeClass('col-md-8 col-lg-9').addClass('col-md-12 col-lg-12');
+        }
+    })
+</script>
 
 </html>

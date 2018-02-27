@@ -51,7 +51,7 @@ class Category(models.Model):
 
     class Meta:
         # verbose_name_plural为指定名称的复数类
-        verbose_name_plural=verbose_name = u'分类'
+        verbose_name_plural = verbose_name = u'分类'
         ordering = ['rank', '-create_time']
         # app_label = string_with_title('blog', '博客管理')
 
@@ -66,10 +66,10 @@ class Post(models.Model):
         Category, verbose_name='分类', default=None, blank=True, null=True)
     title = models.CharField(max_length=200, verbose_name='标题')
 
-    content = models.TextField(verbose_name='正文', default='')
+    context = models.TextField(verbose_name='正文', default='')
     # 根据分类自动添加图片
     # img = models.CharField(max_length=200,default='/static/img/article/default')
-    summary = models.TextField(verbose_name='摘要', default='')
+    summary = models.CharField(max_length=200, verbose_name='摘要', default='')
 
     created_date = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
 
@@ -93,6 +93,9 @@ class Post(models.Model):
 
     status = models.IntegerField(default=0, choices=STATUS.items())
 
+    def get_absolute_url(self):
+        return reverse('post-detail', kwargs={'pk': self.pk})
+
     def publish(self):
         self.published_date = timezone.now()
         self.save()
@@ -106,14 +109,15 @@ class Post(models.Model):
         '''更新评论数'''
         self.commentsnum += 1
         self.save()
+
     def likeunmadd(self):
         '''更新点赞数'''
         self.likenum += 1
-        self.save()  
+        self.save()
 
     class Meta:
-        verbose_name_plural=verbose_name = u"文章"
-        ordering = ['rank', '-is_top', '-published_date', '-created_date']
+        verbose_name_plural = verbose_name = u"文章"
+        ordering = ['-is_top', 'rank',  '-published_date', '-created_date']
         # app_label = string_with_title('blog', '博客管理')
 
     def __str__(self):

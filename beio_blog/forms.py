@@ -7,11 +7,12 @@ class PostForm(forms.ModelForm):
     class Meta(object):
         """docstring for Meta"""
         model = Post
-        fields = ('title', 'content','tags','category')
+        fields = ('title', 'context','summary','tags','category')
 
         labels = {
             'title': ('标题'),
-            'content': ('正文'),
+            'context': ('正文'),
+            'summary':('摘要'),
             'category': ('分类'),
             'tags': ('标签'),
         }

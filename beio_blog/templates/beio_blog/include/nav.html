@@ -1,11 +1,12 @@
 {% url 'index-view' as index_url %}
-{% url 'all-view' as all_url %} 
-{% url 'news-view' as news_url %}
-{% url 'user-view' 'forgetpassword' as forgetpassword_url %} 
-{% url 'user-view' 'changetx' as changetx_url%} 
-{% url 'user-view' 'changepassword' as changepassword_url%}
-{% url 'user-view' 'notification' as notification_url%} 
-{% url 'user-view' 'down' as down%}
+ {% url 'all-view' as all_url %} 
+ {% url 'news-view' as news_url %}
+ {%url 'post_new' as post_new%}
+  {% url 'user-view' 'forgetpassword' as forgetpassword_url %} 
+  {% url 'user-view' 'changetx' as changetx_url%} 
+  {% url 'user-view' 'changepassword' as changepassword_url%} 
+  {% url 'user-view' 'notification' as notification_url%} 
+  {% url 'user-view' 'down' as down%}
 
 
 <header id="vmaig-header" class="navbar navbar-inverse navbar-fixed-top navbar-vmaig">
@@ -29,7 +30,7 @@
                 </li>
                 <li>
                     <a href="{{all_url}}">
-                        <span class="glyphicon glyphicon-star-empty "></span> 全部文章
+                        <span class="glyphicon glyphicon-list-alt "></span> 全部文章
                     </a>
                 </li>
                 <li>
@@ -37,20 +38,24 @@
                         <span class="glyphicon glyphicon-globe"></span> 资讯
                     </a>
                 </li>
-                <li id="aboutme">
-                    <a href="/About">
-                        关于本站
-                    </a>
-                </li>
+
                 <li id="leavemsg">
                     <a href="{{down}}">
+                        <span class="glyphicon glyphicon glyphicon-bullhorn"></span>
                         留言墙
                     </a>
                 </li>
                 {%if user.is_authenticated%}
                 <li id="leavemsg">
-                    <a href="{%url 'post_new' %}">
+                    <a href="{{post_new}}">
+                        <span class="glyphicon glyphicon-plus-sign"></span>
                         写博客
+                    </a>
+                </li>
+                <li id="aboutme">
+                    <a href="/About">
+                        <span class="glyphicon glyphicon-send"></span>
+                        关于本站
                     </a>
                 </li>
                 {%endif%} {% if nav_list%} {% for nav in nav_list%}
